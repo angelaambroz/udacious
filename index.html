@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <title>Tanzania: 2015 Constitutional referendum</title>
+    <style>
+/* To do. */
+
+.obs {
+	fill: "gray";
+	stroke-width: 1px;
+	stroke: "black";
+	opacity: 0.8;
+}
+
+    </style>
+</head>
+
+<body>
+
+<script>
+
+"use strict";
+
+var w = 800,
+	h = 500,
+	margins = 10,
+	layout_gravity = -0.01,
+	damper = 0.09,
+	nodes = [],
+	obs;
+
+var center = { x: w / 2, y: h / 2 };
+
+var ref_centers = {
+	"Vote for": { x: w/3 , y: h/2 },
+	"Vote against": { x: 2*(w/3), y: h/2 },
+}; 
+
+var force = d3.layout.force();
+
+var svg = d3.select("body")
+	.append("svg")
+	.attr("width", w - margins)
+	.attr("height", h - margins);
+
+
+function move_towards_center(alpha) {
+	return function(d) {
+	d.x = d.x + (center.x - d.x) * (damper + 0.02) * alpha;
+	d.y = d.y + (center.y - d.y) * (damper + 0.02) * alpha;
+	};
+};
+
+function move_towards_vote(alpha) {
+	return function(d) {
+		var target = ref_centers[d.vote];
+		d.x = d.x + (target.x - d.x) * (damper + 0.05) * alpha;
+		d.y = d.y + (target.y - d.y) * (damper + 0.05) * alpha;
+		};
+}
+
+
+function nodify(d) {
+	var node = {
+		id: d.uhn,
+		draft: d.q4_2015,
+		vote: d.q12_2015,
+		sex: d.gender_2015,
+		urban: d.urban_2015
+	};
+	nodes.push(node);
+};
+
+
+function viz(data) {
+	console.log(nodes);
+
+	//Initializing the d3 force layout.
+	force.gravity(layout_gravity)
+		.charge(charge)
+		.friction(0.9)
+		.nodes(nodes)
+		.size([w - margins, h - margins]);
+
+	obs = obs.data(nodes)
+		.enter()
+		.append("circle")
+		.classed("obs", true)
+		.call(force.drag);
+
+	obs.selectAll("circle")
+		.attr("r", 2)
+		.attr("id", function(d) { return "obs_" + d.id; });
+
+	force.on("tick", function(e) {
+			obs.each(move_towards_center(e.alpha))
+			.attr("transform", function(d, i) {
+				return "translate(" + d.x + "," + d.y + ")";
+			})
+		})
+		.start();
+
+
+}; //end viz function
+
+
+
+//Better organization: putting everything into above functions
+d3.csv("udacity.csv", nodify, viz)
+
+
+</script>
+
+</body>
+</head>
+</html>
