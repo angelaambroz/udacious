@@ -10,7 +10,7 @@ Tanzania's new constitution, 2015: A data visualization
 
 The first design idea: I'll use a force layout of each individual observation (anonymized), with voters moving to the left ("NAY") or right ("YEA") on the hypothetical referendum question. 
 
-![Design, as of 23 March 2015](https://raw.github.com/angelaambroz/p_udacious/branch/path/to/img.png)
+![Design, as of 23 March 2015](https://raw.github.com/angelaambroz/p_udacious/design_pic.jpg)
 
 _Chart type_: [Force layout](https://github.com/mbostock/d3/wiki/Force-Layout)
 
