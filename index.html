@@ -7,13 +7,6 @@
     <style>
 /* To do. */
 
-.obs {
-	fill: "gray";
-	stroke-width: 1px;
-	stroke: "black";
-	opacity: 0.8;
-}
-
     </style>
 </head>
 
@@ -29,7 +22,7 @@ var w = 800,
 	layout_gravity = -0.01,
 	damper = 0.09,
 	nodes = [],
-	obs;
+	obs = {};
 
 var center = { x: w / 2, y: h / 2 };
 
@@ -44,6 +37,13 @@ var svg = d3.select("body")
 	.append("svg")
 	.attr("width", w - margins)
 	.attr("height", h - margins);
+
+var obs = svg.selectAll("g.obs");
+
+			
+function charge(d) {
+	return -Math.pow(2, 2.0) / 5;
+};
 
 
 function move_towards_center(alpha) {
@@ -75,7 +75,6 @@ function nodify(d) {
 
 
 function viz(data) {
-	console.log(nodes);
 
 	//Initializing the d3 force layout.
 	force.gravity(layout_gravity)
@@ -90,8 +89,12 @@ function viz(data) {
 		.classed("obs", true)
 		.call(force.drag);
 
-	obs.selectAll("circle")
-		.attr("r", 2)
+	d3.selectAll("circle")
+		.attr("radius", 2)
+		.style("fill", "gray")
+		.style("stroke-width", 1)
+		.style("stroke", "black")
+		.style("opacity", 0.8) 
 		.attr("id", function(d) { return "obs_" + d.id; });
 
 	force.on("tick", function(e) {
@@ -102,6 +105,7 @@ function viz(data) {
 		})
 		.start();
 
+		debugger;
 
 }; //end viz function
 
