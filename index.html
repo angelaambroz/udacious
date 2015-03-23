@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
   <title>Tanzania: 2015 Constitutional referendum</title>
     <style>
 /* To do. */
@@ -22,7 +22,8 @@ var w = 800,
 	layout_gravity = -0.01,
 	damper = 0.09,
 	nodes = [],
-	obs = {};
+	radius = 2,
+	obs;
 
 var center = { x: w / 2, y: h / 2 };
 
@@ -38,15 +39,13 @@ var svg = d3.select("body")
 	.attr("width", w - margins)
 	.attr("height", h - margins);
 
-var obs = svg.selectAll("g.obs");
-
-			
 function charge(d) {
-	return -Math.pow(2, 2.0) / 5;
+	return -Math.pow(radius, 2.0) / 5;
 };
 
 
 function move_towards_center(alpha) {
+	debugger;
 	return function(d) {
 	d.x = d.x + (center.x - d.x) * (damper + 0.02) * alpha;
 	d.y = d.y + (center.y - d.y) * (damper + 0.02) * alpha;
@@ -64,7 +63,7 @@ function move_towards_vote(alpha) {
 
 function nodify(d) {
 	var node = {
-		id: d.uhn,
+		id: +d.uhn,
 		draft: d.q4_2015,
 		vote: d.q12_2015,
 		sex: d.gender_2015,
@@ -83,29 +82,36 @@ function viz(data) {
 		.nodes(nodes)
 		.size([w - margins, h - margins]);
 
-	obs = obs.data(nodes)
+	//This is where the callback error is happening
+	obs = svg.selectAll("circle")
+		.data(nodes)
 		.enter()
 		.append("circle")
-		.classed("obs", true)
-		.call(force.drag);
-
-	d3.selectAll("circle")
-		.attr("radius", 2)
+		.attr("r", radius)
 		.style("fill", "gray")
-		.style("stroke-width", 1)
+		.style("stroke-width", "1px")
 		.style("stroke", "black")
 		.style("opacity", 0.8) 
-		.attr("id", function(d) { return "obs_" + d.id; });
+		.attr("id", function(d) { return "obs_" + d.id; })
+		.classed("obs", true)
+		.call(force);
+
+	debugger;
+
+	console.log("hi");
+
+//	obs.append("svg:circle");
 
 	force.on("tick", function(e) {
 			obs.each(move_towards_center(e.alpha))
 			.attr("transform", function(d, i) {
 				return "translate(" + d.x + "," + d.y + ")";
+				})
 			})
-		})
 		.start();
 
-		debugger;
+
+
 
 }; //end viz function
 
