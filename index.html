@@ -12,6 +12,8 @@
 
 <body>
 
+	<div id="update"><p>UPDATE</p></div>
+
 <script>
 
 "use strict";
@@ -30,6 +32,10 @@ var center = { x: w / 2, y: h / 2 };
 var ref_centers = {
 	"Vote for": { x: w/3 , y: h/2 },
 	"Vote against": { x: 2*(w/3), y: h/2 },
+	"Not sure": { x: 5*w, y: h },
+	"Don't Know": { x: 5*w, y: h },
+	"No Response": { x: 5*w, y: h },
+	"I am not going to vote": { x: 5*w, y: h }
 }; 
 
 var force = d3.layout.force();
@@ -45,7 +51,6 @@ function charge(d) {
 
 
 function move_towards_center(alpha) {
-	debugger;
 	return function(d) {
 	d.x = d.x + (center.x - d.x) * (damper + 0.02) * alpha;
 	d.y = d.y + (center.y - d.y) * (damper + 0.02) * alpha;
@@ -63,7 +68,7 @@ function move_towards_vote(alpha) {
 function voting() {
 	force.start()
 		.on("tick", function(e) {
-		candidates.each(move_towards_sex(e.alpha))
+		obs.each(move_towards_vote(e.alpha))
 			.attr("transform", function(d, i) {
 				return "translate(" + d.x + "," + d.y + ")";
 		});
@@ -80,6 +85,16 @@ function nodify(d) {
 	};
 	nodes.push(node);
 };
+
+function update(){
+	force.on("tick", function(e) {
+		obs.each(move_towards_vote(e.alpha))
+		.attr("transform", function(d, i) {
+			return "translate(" + d.x + "," + d.y + ")";
+			})
+		})
+	.start();
+}
 
 
 function viz(data) {
@@ -116,11 +131,7 @@ function viz(data) {
 			})
 		.start();
 
-
-	//d3.select(window).on("click", voting());
-
-	debugger;
-
+	d3.select("#update").on("click", update);
 
 }; //end viz function
 
