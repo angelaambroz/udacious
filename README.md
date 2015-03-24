@@ -31,6 +31,7 @@ Coming soon.
 ### Resources
 * Resource: [Udacity - Data visualization and D3.js](https://www.udacity.com/course/ud507)
 * Resource: [d3.js API - Force layout](https://github.com/mbostock/d3/wiki/Force-Layout)
+* Q&A: [StackOverflow - Force layout within a shape](https://stackoverflow.com/questions/15100060/d3-js-force-directed-layout-constrained-by-a-shape?rq=1)
 
 
 ### TODO

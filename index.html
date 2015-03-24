@@ -60,6 +60,15 @@ function move_towards_vote(alpha) {
 		};
 }
 
+function voting() {
+	force.start()
+		.on("tick", function(e) {
+		candidates.each(move_towards_sex(e.alpha))
+			.attr("transform", function(d, i) {
+				return "translate(" + d.x + "," + d.y + ")";
+		});
+	});
+}
 
 function nodify(d) {
 	var node = {
@@ -88,19 +97,16 @@ function viz(data) {
 		.enter()
 		.append("circle")
 		.attr("r", radius)
-		.style("fill", "gray")
+		.style("fill", function(d) {
+			if (d.sex=="Female") { return "pink"; }
+			else { return "blue"; }
+		})
 		.style("stroke-width", "1px")
 		.style("stroke", "black")
 		.style("opacity", 0.8) 
 		.attr("id", function(d) { return "obs_" + d.id; })
 		.classed("obs", true)
-		.call(force);
-
-	debugger;
-
-	console.log("hi");
-
-//	obs.append("svg:circle");
+		.call(force.drag);
 
 	force.on("tick", function(e) {
 			obs.each(move_towards_center(e.alpha))
@@ -111,6 +117,9 @@ function viz(data) {
 		.start();
 
 
+	//d3.select(window).on("click", voting());
+
+	debugger;
 
 
 }; //end viz function
