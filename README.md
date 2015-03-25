@@ -44,15 +44,15 @@ Coming soon.
 4. Prep data for ~~2015~~, 2014, 2013 (all SZW), and 2012 (Afrobarometer).
 5. ~~Incorporate Udacity tips re: accessor and visualization functions (get better at understanding callbacks).~~
 6. ~~Add draft-preference buttons.~~
-7. Style everything.
+7. ~~Style everything.~~
 8. Fluidify the force layout - right now it lags a lot. 
-9. The problem of sample weights...! 
-10. Add reset button.
-11. Add tons of explanatory captions.
+9. ~~The problem of sample weights...!~~
+10. ~~Add reset button.~~
+11. ~~Add tons of explanatory captions.~~
 12. ~~Add fancy Sam Pepys YEA/NAY tooltips.~~
 13. Add urban/rural, gender highlights + buttons.
 14. ~~Are my hard-coded labels right!?~~
 15. ~~`d3.sum` and average the percent of people that are in each bucket.~~ (Hard-coding for now... so wrong..?!)
 16. ~~Non-italic `Essays 1743` font on the YEA/NAY labels.~~
-17. Legend, with circles.
+17. ~~Legend, with circles.~~
 

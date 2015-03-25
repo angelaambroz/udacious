@@ -37,7 +37,7 @@
 	background-color: #E6E6E6;
 }
 
-.buttons:hover,.reset:hover{
+.buttons:hover,#reset:hover,#rural-urban:hover{
 	cursor: pointer;
 }
 
@@ -72,11 +72,11 @@
 	text-align: center;
 }
 
-.legend {
+.legend, #rural-urban {
 	font: 300 10px "Opens Sans", sans-serif;
 }
 
-.reset {
+#reset {
 	font: 400 20px "Josefin Slab", sans-serif;
 }
 
@@ -107,7 +107,7 @@
 <body>
 
 <div class="header"><h2>Tanzania's upcoming constitutional referendum</h2>
-<h4>A data visualization written in <a href="http://www.d3js.org" target="_blank">D3.js</a> by <a href="http://www.angelaambroz.com" target="_blank">Angela Ambroz</a> for <a href="http://www.twaweza.org" target="_blank">Twaweza</a>.</h4></div>
+<h4>A data visualization written in <a href="http://www.d3js.org" target="_blank">D3.js</a>.</h4></div>
 
 	<div class="buttons" id="draft"><p>Which draft do people prefer?</p></div>
 	<div class="buttons" id="vote"><p>How will people vote in the constitutional referendum?</p></div>
@@ -127,7 +127,7 @@
 
 	<div class="blurb hidden bottom" id="vote-text">
 		<p>
-		A referendum on the new draft constitution has been scheduled for April 2015 for some time - but is the country ready? A coalition of opposition parties, <a href="" target="_blank">Ukawa</a>, has called on its supporters to boycott the process. While it is unclear how many people will follow through with this, quite a few (22%) are still undecided.</p> 
+		A referendum on the new draft constitution has been scheduled for April 2015 for some time - but is the country ready? A coalition of opposition parties, Ukawa, has called on its supporters to boycott the process. While it is unclear how many people will follow through with this, quite a few (22%) are still undecided.</p> 
 
 		<p>The National Electoral Commission's plan to register all 25,000,000 voting-age citizens with a biometric voter identification is woefully behind schedule, <a href="http://mtega.com/2015/03/is-there-still-time-for-nec-to-complete-biometric-voter-registration-for-tanzanias-constitution-referendum/" target="_blank">with some analysts estimating the earliest date they would be ready would be April 25</a>. 
 		</p>
@@ -150,11 +150,11 @@ var w = 1000,
 	damper = 0.09,
 	nodes = [],
 	radius = 2,
+	toggle = false,
 	obs,
 	girl_color = "rgb(255, 204, 255)",
 	boy_color="rgb(153, 204, 255)",
-	userSelection,
-	test;
+	userSelection;
 
 var center = { x: w / 2, y: h / 2 };
 
@@ -173,7 +173,8 @@ var ref_centers = {
 
 var legend_info = [
 	{ text: "1 male respondent", color: boy_color },
-	{ text: "1 female respondent", color: girl_color }
+	{ text: "1 female respondent", color: girl_color },
+	{ text: "Urban", color: "white" }
 ];
 
 var force = d3.layout.force();
@@ -186,7 +187,7 @@ var svg = d3.select("body")
 
 //Various buttons, legends, and so on
 var reset = svg.append("g")
-	.attr("class", "reset");
+	.attr("id", "reset");
 
 reset.append("rect")
 	.attr("width", "60px")
@@ -202,10 +203,6 @@ reset.append("text")
 	.attr("y", "393px")
 	.text("reset");
 
-var caption = d3.select("svg")
-	.append("text")
-	.attr("class", "caption")
-
 var legend = svg.selectAll("g.legend")
   .data(legend_info)
   .enter().append("g")
@@ -215,12 +212,24 @@ legend.append("circle")
 	.attr("r", 2*radius)
 	.attr("cx", w-200)
 	.attr("cy", function(d, i) { return 100 + (i*10*radius);})
-	.style("fill", function(d) { return d.color; });
+	.style("fill", function(d) { return d.color; })
+	.style("stroke", function(d) { 
+		if(d.text=="Urban") { return "black"; };
+	})
+	.style("stroke", function(d) { 
+		if(d.text=="Urban") { return "1px"; };
+	});
 
 legend.append("text")
 	.attr("x", w-190)
 	.attr("y", function(d, i ) { return 103 + (i*10*radius);})
 	.text(function(d) { return d.text; });
+
+svg.append("text")
+	.attr("x", w-190)
+	.attr("y", 170)
+	.attr("id", "rural-urban")
+	.text("Click for rural/urban split.");
 
 
 //All the functions...
@@ -257,9 +266,7 @@ function nodify(d) {
 };
 
 function update(d) {
-
 	userSelection = this.id;
-
 	d3.selectAll(".label, .blurb").classed("hidden", true);
 
 	if(userSelection=="vote") { d3.selectAll(".votes,#vote-text").classed("hidden", false); }
@@ -286,6 +293,25 @@ function resetting() {
 	.start();	
 };
 
+function urbanizing(d) {
+	console.log(toggle);
+
+	if(toggle===false) {
+		obs.style("stroke-width", "1px")
+			.style("stroke", function(d) {
+				if (d.urban=="Urban") { return "black"; }
+				else { return null; }
+				});
+		toggle = true;
+	}
+	else {
+		obs.style("stroke-width", 0)
+			.style("stroke", null);
+		toggle = false;
+	}
+
+};
+
 
 function viz(data) {
 
@@ -308,15 +334,11 @@ function viz(data) {
 			if (d.sex=="Female") { return girl_color; }
 			else { return boy_color; }
 		})
-		.style("stroke-width", "1px")
-		.style("stroke", function(d) {
-			if (d.sex=="Female") { return d3.rgb(girl_color).darker; }
-			else { return d3.rgb(boy_color).darker; }
-		})
 		.style("opacity", 0.8) 
 		.attr("id", function(d) { return "obs_" + d.id; })
-		.classed("obs", true)
-		.call(force.drag);
+		.classed("obs", true);
+	
+	obs.call(force.drag);
 
 	force.on("tick", function(e) {
 			obs.each(move_towards_center(e.alpha))
@@ -328,6 +350,9 @@ function viz(data) {
 
 }; //end viz function
 
+
+//Calling everything
+
 //Better organization: putting everything into above functions
 d3.csv("udacity.csv", nodify, viz)
 
@@ -335,7 +360,10 @@ d3.csv("udacity.csv", nodify, viz)
 d3.selectAll(".buttons").on("click", update);
 
 //Reset
-d3.select(".reset").on("click", resetting);
+d3.select("#reset").on("click", resetting);
+
+//Rural-urban split
+d3.select("#rural-urban").on("click", urbanizing);
 
 </script>
 
