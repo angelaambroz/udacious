@@ -52,5 +52,7 @@ Coming soon.
 12. ~~Add fancy Sam Pepys YEA/NAY tooltips.~~
 13. Add urban/rural, gender highlights + buttons.
 14. ~~Are my hard-coded labels right!?~~
-15. `d3.sum` and average the percent of people that are in each bucket. 
+15. ~~`d3.sum` and average the percent of people that are in each bucket.~~ (Hard-coding for now... so wrong..?!)
+16. ~~Non-italic `Essays 1743` font on the YEA/NAY labels.~~
+17. Legend, with circles.
 

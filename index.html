@@ -37,7 +37,7 @@
 	background-color: #E6E6E6;
 }
 
-.buttons:hover{
+.buttons:hover,.reset:hover{
 	cursor: pointer;
 }
 
@@ -56,11 +56,47 @@
 	height: auto;
 	background-color: none;
 	pointer-events: none;
-	font: 300 14px "Essays1743", serif;
+	font: 300 18px "Essays1743", serif;
+}
+
+.label p {
+	margin: 0px;
 }
 
 .hidden {
 	display: none;
+}
+
+.number {
+	font: 300 14px "Open Sans", sans-serif;
+	text-align: center;
+}
+
+.legend {
+	font: 300 10px "Opens Sans", sans-serif;
+}
+
+.reset {
+	font: 400 20px "Josefin Slab", sans-serif;
+}
+
+.blurb {
+	position: absolute;
+	font: 300 12px "Opens Sans", sans-serif;;
+}
+
+.bottom {
+	width: 500px;
+	height: auto;
+	left: 200px;
+	top: 450px;
+}
+
+.right {
+	width: 280px;
+	height: auto;
+	left: 780px;
+	top: 200px;
 }
 
 
@@ -76,11 +112,32 @@
 	<div class="buttons" id="draft"><p>Which draft do people prefer?</p></div>
 	<div class="buttons" id="vote"><p>How will people vote in the constitutional referendum?</p></div>
 	
-	<div id="yea" class="label votes hidden" style="left: 360px; top:350px">YEA</div>
-	<div id="nay" class="label votes hidden" style="left: 734px; top:350px">NAY</div>
+	<div id="yea" class="label votes hidden" style="left: 360px; top:350px"><p>YEA</p><p><span class="number">52%</span></p></div>
+	<div id="nay" class="label votes hidden" style="left: 734px; top:350px"><p>NAY</p><p><span class="number">26%</span></p></div>
 
-	<div id="CRC" class="label drafts hidden" style="left: 600px; top:150px">The draft by the Constitutional Review Commission</div>
-	<div id="final" class="label drafts hidden" style="left: 600px; top:400px">The second, and final, draft</div>
+	<div id="CRC" class="label drafts hidden" style="left: 600px; top:130px"><p>The draft by the Constitutional Review Commission</p><p><span class="number">41%</span></p></div>
+	<div id="final" class="label drafts hidden" style="left: 600px; top:370px"><p>The second,  final draft</p><p><span class="number">39%</span></p></div>
+
+	<div class="blurb hidden bottom" id="intro">
+		<p>
+		Imagine this is all of Tanzania. Actually, it's 1,399 Tanzanians, randomly selected from around the country. But, for all intents and purposes, this blob of pink and blue dots <em><a href="https://en.wikipedia.org/wiki/Sample_%28statistics%29" target="_blank">represents</a></em> the entire country. <a href="http://www.twaweza.org" target="_blank">Twaweza</a>, through its <a href="http://twaweza.org/go/sauti-za-wananchi-english" target="_blank">Sauti za Wananchi</a> (<em>Citizen's Voice</em>) initiative, calls these randomly-selected citizens every month and asks them about their lives.
+		</p>
+		<p>In January 2015, they were asked about the new draft constitution, and its upcoming referendum scheduled for April 2015.</p>
+	</div>
+
+	<div class="blurb hidden bottom" id="vote-text">
+		<p>
+		A referendum on the new draft constitution has been scheduled for April 2015 for some time - but is the country ready? A coalition of opposition parties, <a href="" target="_blank">Ukawa</a>, has called on its supporters to boycott the process. While it is unclear how many people will follow through with this, quite a few (22%) are still undecided.</p> 
+
+		<p>The National Electoral Commission's plan to register all 25,000,000 voting-age citizens with a biometric voter identification is woefully behind schedule, <a href="http://mtega.com/2015/03/is-there-still-time-for-nec-to-complete-biometric-voter-registration-for-tanzanias-constitution-referendum/" target="_blank">with some analysts estimating the earliest date they would be ready would be April 25</a>. 
+		</p>
+	</div>
+
+	<div class="blurb hidden right" id="draft-considerations">
+		<p>Certain key issues have been removed or watered down between the original draft constitution and the second draft (which is the current, and final, one). While the CRC draft was prepared by the Constitutional Review Commission, the second draft was prepared by the Constituent Assembly - made up of the ruling party, opposition parties (who later formed a coalition and walked out), and stakeholders from civil society. </p>
+		<p>What changed between drafts? The clause which allowed underperforming Members of Parliament to be ousted by their constituents has been removed. Transparency and accountability measures have been removed. And, perhaps most contentiously, the three-government proposal (Zanzibar, Tanganyika, and a union government) is gone.</p>
+	</div>
+
 
 <script>
 
@@ -114,6 +171,11 @@ var ref_centers = {
 	"Final draft": { x: w/2, y: 3*h/4-20 }
 }; 
 
+var legend_info = [
+	{ text: "1 male respondent", color: boy_color },
+	{ text: "1 female respondent", color: girl_color }
+];
+
 var force = d3.layout.force();
 
 var svg = d3.select("body")
@@ -122,10 +184,46 @@ var svg = d3.select("body")
 	.attr("height", h - margins);
 
 
+//Various buttons, legends, and so on
+var reset = svg.append("g")
+	.attr("class", "reset");
+
+reset.append("rect")
+	.attr("width", "60px")
+	.attr("height", "25px")
+	.attr("fill", "none")
+	.attr("stroke", "gray")
+	.attr("stroke-dasharray", "5,5")
+	.attr("x", "50px")
+	.attr("y", "375px");
+
+reset.append("text")
+	.attr("x", "62px")
+	.attr("y", "393px")
+	.text("reset");
+
 var caption = d3.select("svg")
 	.append("text")
 	.attr("class", "caption")
 
+var legend = svg.selectAll("g.legend")
+  .data(legend_info)
+  .enter().append("g")
+  .attr("class", "legend");
+
+legend.append("circle")
+	.attr("r", 2*radius)
+	.attr("cx", w-200)
+	.attr("cy", function(d, i) { return 100 + (i*10*radius);})
+	.style("fill", function(d) { return d.color; });
+
+legend.append("text")
+	.attr("x", w-190)
+	.attr("y", function(d, i ) { return 103 + (i*10*radius);})
+	.text(function(d) { return d.text; });
+
+
+//All the functions...
 
 function charge(d) {
 	return -Math.pow(radius, 2.0) / 5;
@@ -158,14 +256,14 @@ function nodify(d) {
 	nodes.push(node);
 };
 
-function update(d){
+function update(d) {
 
 	userSelection = this.id;
 
-	d3.selectAll(".label").classed("hidden", true);
+	d3.selectAll(".label, .blurb").classed("hidden", true);
 
-	if(userSelection=="vote") { d3.selectAll(".votes").classed("hidden", false); }
-	else if(userSelection=="draft") { d3.selectAll(".drafts").classed("hidden", false); }
+	if(userSelection=="vote") { d3.selectAll(".votes,#vote-text").classed("hidden", false); }
+	else if(userSelection=="draft") { d3.selectAll(".drafts,#draft-considerations").classed("hidden", false); }
 
 	force.on("tick", function(e) {
 		obs.each(move_towards_vote(e.alpha))
@@ -174,10 +272,24 @@ function update(d){
 			})
 		})
 	.start();
-}
+};
+
+function resetting() {
+	d3.selectAll(".label, .blurb").classed("hidden", true);
+	
+	force.on("tick", function(e) {
+		obs.each(move_towards_center(e.alpha))
+		.attr("transform", function(d, i) {
+			return "translate(" + d.x + "," + d.y + ")";
+			})
+		})
+	.start();	
+};
 
 
 function viz(data) {
+
+	d3.select("#intro").classed("hidden", false);
 
 	//Initializing the d3 force layout.
 	force.gravity(layout_gravity)
@@ -219,9 +331,11 @@ function viz(data) {
 //Better organization: putting everything into above functions
 d3.csv("udacity.csv", nodify, viz)
 
-//Update outside of viz function?
+//Update with draft vs. 
 d3.selectAll(".buttons").on("click", update);
 
+//Reset
+d3.select(".reset").on("click", resetting);
 
 </script>
 
