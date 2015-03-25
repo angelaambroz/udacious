@@ -47,4 +47,7 @@ Coming soon.
 7. Style everything.
 8. Fluidify the force layout - right now it lags a lot. 
 9. The problem of sample weights...! 
-
+10. Add reset button.
+11. Add tons of explanatory captions.
+12. Add fancy Sam Pepys YEA/NAY tooltips.
+13. Add urban/rural, gender highlights.

@@ -3,21 +3,46 @@
 <head>
   <meta charset="utf-8">
   <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-  <title>Tanzania's new constitution</title>
+  <link href='http://fonts.googleapis.com/css?family=Josefin+Slab:400,300,600' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
+  <title>katiba</title>
     <style>
+
+.header {
+	position: absolute;
+	top: 20px;
+	left: 50px;
+}
+
+.header h2 {
+ 	font: 600 24px "Josefin Slab", serif;
+ }
+
+.header h4 {
+	font: 400 14px "Josefin Slab", serif;
+}
+
 
 .buttons {
 	position: absolute;
 	left: 50px;
+	font: 300 14px "Open Sans", sans-serif;
+	width: 100px;
+}
+
+.buttons:hover{
+	cursor: pointer;
+}
+
+
+#draft {
+	top: 150px;
 }
 
 #vote {
-	top: 100px;
+	top: 250px;
 }
 
-#draft {
-	top: 130px;
-}
 
 
     </style>
@@ -26,10 +51,11 @@
 <body>
 
 <div class="header"><h2>Tanzania's upcoming constitutional referendum</h2>
-<h4>A data visualization written in <a href="http://www.d3js.org" target="_blank">D3.js</a>.</h4></div>
+<h4>A data visualization written in <a href="http://www.d3js.org" target="_blank">D3.js</a> by <a href="http://www.angelaambroz.com" target="_blank">Angela Ambroz</a> for <a href="http://www.twaweza.org" target="_blank">Twaweza</a>.</h4></div>
 
-	<div class="buttons" id="vote"><p>How will people vote in the constitutional referendum?</p></div>
 	<div class="buttons" id="draft"><p>Which draft do people prefer?</p></div>
+	<div class="buttons" id="vote"><p>How will people vote in the constitutional referendum?</p></div>
+	
 
 <script>
 
@@ -53,14 +79,14 @@ var center = { x: w / 2, y: h / 2 };
 var ref_centers = {
 	"Vote for": { x: w/3 , y: h/2 },
 	"Vote against": { x: 2*(w/3), y: h/2 },
-	"Not sure": { x: 5*w, y: h },
-	"Don't Know": { x: 5*w, y: h },
-	"No Response": { x: 5*w, y: h },
-	"None": { x: 5*w, y: h },
-	"Refused to Answer": { x: 5*w, y: h },
-	"I am not going to vote": { x: 5*w, y: h },
-	"CRC draft": { x: w/2, y: h/4 },
-	"Final draft": { x: w/2, y: 3*h/4 }
+	"Not sure": { x: 1.5*w, y: h },
+	"Don't Know": { x: 1.5*w, y: h },
+	"No Response": { x: 1.5*w, y: h },
+	"None": { x: 1.5*w, y: h },
+	"Refused to Answer": { x: 1.5*w, y: h },
+	"I am not going to vote": { x: 1.5*w, y: h },
+	"CRC draft": { x: w/2, y: h/4 + 60 },
+	"Final draft": { x: w/2, y: 3*h/4-20 }
 }; 
 
 var force = d3.layout.force();
@@ -172,14 +198,13 @@ function viz(data) {
 			})
 		.start();
 
-	d3.selectAll(".buttons").on("click", update);
-
 }; //end viz function
-
-
 
 //Better organization: putting everything into above functions
 d3.csv("udacity.csv", nodify, viz)
+
+//Update outside of viz function?
+d3.selectAll(".buttons").on("click", update);
 
 
 </script>
