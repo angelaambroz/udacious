@@ -3,16 +3,33 @@
 <head>
   <meta charset="utf-8">
   <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-  <title>Tanzania: 2015 Constitutional referendum</title>
+  <title>Tanzania's new constitution</title>
     <style>
-/* To do. */
+
+.buttons {
+	position: absolute;
+	left: 50px;
+}
+
+#vote {
+	top: 100px;
+}
+
+#draft {
+	top: 130px;
+}
+
 
     </style>
 </head>
 
 <body>
 
-	<div id="update"><p>UPDATE</p></div>
+<div class="header"><h2>Tanzania's upcoming constitutional referendum</h2>
+<h4>A data visualization written in <a href="http://www.d3js.org" target="_blank">D3.js</a>.</h4></div>
+
+	<div class="buttons" id="vote"><p>How will people vote in the constitutional referendum?</p></div>
+	<div class="buttons" id="draft"><p>Which draft do people prefer?</p></div>
 
 <script>
 
@@ -27,7 +44,9 @@ var w = 800,
 	radius = 2,
 	obs,
 	girl_color = "rgb(255, 204, 255)",
-	boy_color="rgb(153, 204, 255)";
+	boy_color="rgb(153, 204, 255)",
+	userSelection,
+	test;
 
 var center = { x: w / 2, y: h / 2 };
 
@@ -37,7 +56,11 @@ var ref_centers = {
 	"Not sure": { x: 5*w, y: h },
 	"Don't Know": { x: 5*w, y: h },
 	"No Response": { x: 5*w, y: h },
-	"I am not going to vote": { x: 5*w, y: h }
+	"None": { x: 5*w, y: h },
+	"Refused to Answer": { x: 5*w, y: h },
+	"I am not going to vote": { x: 5*w, y: h },
+	"CRC draft": { x: w/2, y: h/4 },
+	"Final draft": { x: w/2, y: 3*h/4 }
 }; 
 
 var force = d3.layout.force();
@@ -46,6 +69,15 @@ var svg = d3.select("body")
 	.append("svg")
 	.attr("width", w - margins)
 	.attr("height", h - margins);
+
+
+var caption = d3.select("svg")
+	.append("text")
+	.attr("class", "caption")
+
+
+
+
 
 function charge(d) {
 	return -Math.pow(radius, 2.0) / 5;
@@ -61,16 +93,17 @@ function move_towards_center(alpha) {
 
 function move_towards_vote(alpha) {
 	return function(d) {
-		var target = ref_centers[d.vote];
+		var target = ref_centers[d[userSelection]];
 		d.x = d.x + (target.x - d.x) * (damper + 0.05) * alpha;
 		d.y = d.y + (target.y - d.y) * (damper + 0.05) * alpha;
 		};
 }
 
+
+
 function voting() {
 	force.start()
 		.on("tick", function(i, e) {
-		console.log(i);
 		obs.each(move_towards_vote(e.alpha))
 			.attr("transform", function(d, i) {
 				return "translate(" + d.x + "," + d.y + ")";
@@ -90,6 +123,8 @@ function nodify(d) {
 };
 
 function update(){
+	userSelection = this.id;
+
 	force.on("tick", function(e) {
 		obs.each(move_towards_vote(e.alpha))
 		.attr("transform", function(d, i) {
@@ -137,7 +172,7 @@ function viz(data) {
 			})
 		.start();
 
-	d3.select("#update").on("click", update);
+	d3.selectAll(".buttons").on("click", update);
 
 }; //end viz function
 

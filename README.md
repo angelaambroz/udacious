@@ -22,7 +22,6 @@ Rural/Urban | Stroke color
 Gender| Fill color
 
 
-
 ### Feedback
 
 Coming soon.
@@ -44,7 +43,8 @@ Coming soon.
 3. Add image of design iteration.
 4. Prep data for ~~2015~~, 2014, 2013 (all SZW), and 2012 (Afrobarometer).
 5. ~~Incorporate Udacity tips re: accessor and visualization functions (get better at understanding callbacks).~~
-6. Add draft-preference buttons.
+6. ~~Add draft-preference buttons.~~
 7. Style everything.
 8. Fluidify the force layout - right now it lags a lot. 
+9. The problem of sample weights...! 
 
