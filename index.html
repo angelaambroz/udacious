@@ -8,6 +8,11 @@
   <title>katiba</title>
     <style>
 
+@font-face {
+    font-family: "Essays1743";
+    src: url(Essays1743-Italic.ttf);
+}
+
 .header {
 	position: absolute;
 	top: 20px;
@@ -28,6 +33,8 @@
 	left: 50px;
 	font: 300 14px "Open Sans", sans-serif;
 	width: 100px;
+	padding: 0px 15px;
+	background-color: #E6E6E6;
 }
 
 .buttons:hover{
@@ -43,6 +50,19 @@
 	top: 250px;
 }
 
+.label {
+	position: absolute;
+	width: 150px;
+	height: auto;
+	background-color: none;
+	pointer-events: none;
+	font: 300 14px "Essays1743", serif;
+}
+
+.hidden {
+	display: none;
+}
+
 
 
     </style>
@@ -56,12 +76,17 @@
 	<div class="buttons" id="draft"><p>Which draft do people prefer?</p></div>
 	<div class="buttons" id="vote"><p>How will people vote in the constitutional referendum?</p></div>
 	
+	<div id="yea" class="label votes hidden" style="left: 360px; top:350px">YEA</div>
+	<div id="nay" class="label votes hidden" style="left: 734px; top:350px">NAY</div>
+
+	<div id="CRC" class="label drafts hidden" style="left: 600px; top:150px">The draft by the Constitutional Review Commission</div>
+	<div id="final" class="label drafts hidden" style="left: 600px; top:400px">The second, and final, draft</div>
 
 <script>
 
 "use strict";
 
-var w = 800,
+var w = 1000,
 	h = 500,
 	margins = 10,
 	layout_gravity = -0.01,
@@ -77,8 +102,8 @@ var w = 800,
 var center = { x: w / 2, y: h / 2 };
 
 var ref_centers = {
-	"Vote for": { x: w/3 , y: h/2 },
-	"Vote against": { x: 2*(w/3), y: h/2 },
+	"Vote for": { x: w/3+50 , y: h/2 },
+	"Vote against": { x: 2*(w/3)+50, y: h/2 },
 	"Not sure": { x: 1.5*w, y: h },
 	"Don't Know": { x: 1.5*w, y: h },
 	"No Response": { x: 1.5*w, y: h },
@@ -102,9 +127,6 @@ var caption = d3.select("svg")
 	.attr("class", "caption")
 
 
-
-
-
 function charge(d) {
 	return -Math.pow(radius, 2.0) / 5;
 };
@@ -125,18 +147,6 @@ function move_towards_vote(alpha) {
 		};
 }
 
-
-
-function voting() {
-	force.start()
-		.on("tick", function(i, e) {
-		obs.each(move_towards_vote(e.alpha))
-			.attr("transform", function(d, i) {
-				return "translate(" + d.x + "," + d.y + ")";
-			});
-	});
-};
-
 function nodify(d) {
 	var node = {
 		id: +d.uhn,
@@ -148,8 +158,14 @@ function nodify(d) {
 	nodes.push(node);
 };
 
-function update(){
+function update(d){
+
 	userSelection = this.id;
+
+	d3.selectAll(".label").classed("hidden", true);
+
+	if(userSelection=="vote") { d3.selectAll(".votes").classed("hidden", false); }
+	else if(userSelection=="draft") { d3.selectAll(".drafts").classed("hidden", false); }
 
 	force.on("tick", function(e) {
 		obs.each(move_towards_vote(e.alpha))

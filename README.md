@@ -49,5 +49,8 @@ Coming soon.
 9. The problem of sample weights...! 
 10. Add reset button.
 11. Add tons of explanatory captions.
-12. Add fancy Sam Pepys YEA/NAY tooltips.
-13. Add urban/rural, gender highlights.
+12. ~~Add fancy Sam Pepys YEA/NAY tooltips.~~
+13. Add urban/rural, gender highlights + buttons.
+14. ~~Are my hard-coded labels right!?~~
+15. `d3.sum` and average the percent of people that are in each bucket. 
+
