@@ -37,7 +37,7 @@
 	background-color: #E6E6E6;
 }
 
-.buttons:hover,#reset:hover,#rural-urban:hover{
+.buttons:hover,#reset:hover,.legend:hover{
 	cursor: pointer;
 }
 
@@ -48,6 +48,15 @@
 
 #vote {
 	top: 250px;
+}
+
+#tooltip {
+	position: absolute;
+	width: auto;
+	height: auto;
+	padding: 2px;
+	background-color: white;
+	pointer-events: none;
 }
 
 .label {
@@ -72,7 +81,7 @@
 	text-align: center;
 }
 
-.legend, #rural-urban {
+.legend, .caption, #greeting {
 	font: 300 10px "Opens Sans", sans-serif;
 }
 
@@ -82,7 +91,7 @@
 
 .blurb {
 	position: absolute;
-	font: 300 12px "Opens Sans", sans-serif;;
+	font: 300 12px "Opens Sans", sans-serif;
 }
 
 .bottom {
@@ -92,13 +101,26 @@
 	top: 450px;
 }
 
-.right {
-	width: 280px;
+.left {
+	position: absolute;
+	width: 100px;
 	height: auto;
-	left: 780px;
-	top: 200px;
+	left: 50px;
+	top: 450px;
 }
 
+.caption p {
+	color: gray;
+	text-align: justify;
+}
+
+.caption a {
+	color: gray;
+}
+
+.caption a:hover {
+	background-color: #E6E6E6;
+}
 
 
     </style>
@@ -107,37 +129,43 @@
 <body>
 
 <div class="header"><h2>Tanzania's upcoming constitutional referendum</h2>
-<h4>A data visualization written in <a href="http://www.d3js.org" target="_blank">D3.js</a>.</h4></div>
+<h4>A <a href="http://www.d3js.org" target="_blank">D3.js</a> visualization, using data from <a href="http://twaweza.org/" target="_blank">Twaweza</a>.</h4></div>
 
 	<div class="buttons" id="draft"><p>Which draft do people prefer?</p></div>
 	<div class="buttons" id="vote"><p>How will people vote in the constitutional referendum?</p></div>
 	
-	<div id="yea" class="label votes hidden" style="left: 360px; top:350px"><p>YEA</p><p><span class="number">52%</span></p></div>
-	<div id="nay" class="label votes hidden" style="left: 734px; top:350px"><p>NAY</p><p><span class="number">26%</span></p></div>
+	<div id="yea" class="label votes hidden" style="left: 350px; top:350px"><p>YEA</p><p><span class="number">52%</span></p></div>
+	<div id="nay" class="label votes hidden" style="left: 560px; top:350px"><p>NAY</p><p><span class="number">26%</span></p></div>
+	<div id="dunno" class="label votes hidden" style="left: 725px; top:350px"><p>Undecided</p><p><span class="number">13%</span></p></div>
 
-	<div id="CRC" class="label drafts hidden" style="left: 600px; top:130px"><p>The draft by the Constitutional Review Commission</p><p><span class="number">41%</span></p></div>
-	<div id="final" class="label drafts hidden" style="left: 600px; top:370px"><p>The second,  final draft</p><p><span class="number">39%</span></p></div>
+	<div id="CRC" class="label drafts hidden" style="left: 320px; top:300px"><p>The second draft by the Constitutional Review Commission</p><p><span class="number">41%</span></p></div>
+	<div id="final" class="label drafts hidden" style="left: 680px; top:300px"><p>The final draft by the Constituent Assembly</p><p><span class="number">39%</span></p></div>
 
 	<div class="blurb hidden bottom" id="intro">
 		<p>
-		Imagine this is all of Tanzania. Actually, it's 1,399 Tanzanians, randomly selected from around the country. But, for all intents and purposes, this blob of pink and blue dots <em><a href="https://en.wikipedia.org/wiki/Sample_%28statistics%29" target="_blank">represents</a></em> the entire country. <a href="http://www.twaweza.org" target="_blank">Twaweza</a>, through its <a href="http://twaweza.org/go/sauti-za-wananchi-english" target="_blank">Sauti za Wananchi</a> (<em>Citizen's Voice</em>) initiative, calls these randomly-selected citizens every month and asks them about their lives.
+		Imagine this is all of mainland Tanzania. Actually, it's 1,399 mainland Tanzanians, randomly selected from around the country. But, for all intents and purposes, this blob of pink and blue dots <em><a href="https://en.wikipedia.org/wiki/Sample_%28statistics%29" target="_blank">represents</a></em> the entire country. <a href="http://www.twaweza.org" target="_blank">Twaweza</a>, through its <a href="http://twaweza.org/go/sauti-za-wananchi-english" target="_blank">Sauti za Wananchi</a> (<em>Citizen's Voice</em>) initiative, calls these randomly-selected citizens every month and asks them about their lives.
 		</p>
-		<p>In January 2015, they were asked about the new draft constitution, and its upcoming referendum scheduled for April 2015.</p>
+		<p>In January 2015, they were asked about the new draft constitution and the upcoming referendum scheduled for April 2015.</p>
 	</div>
 
 	<div class="blurb hidden bottom" id="vote-text">
 		<p>
-		A referendum on the new draft constitution has been scheduled for April 2015 for some time - but is the country ready? A coalition of opposition parties, Ukawa, has called on its supporters to boycott the process. While it is unclear how many people will follow through with this, quite a few (22%) are still undecided.</p> 
-
-		<p>The National Electoral Commission's plan to register all 25,000,000 voting-age citizens with a biometric voter identification is woefully behind schedule, <a href="http://mtega.com/2015/03/is-there-still-time-for-nec-to-complete-biometric-voter-registration-for-tanzanias-constitution-referendum/" target="_blank">with some analysts estimating the earliest date they would be ready would be April 25</a>. 
+		A referendum on the new draft constitution has been scheduled for April 2015 for some time - but is the country ready? A coalition of opposition parties, Ukawa, has called on its supporters to boycott the process. While it is unclear how many people will follow through with this, quite a few (13%) are still undecided.</p> 
+		<p>The National Electoral Commission's plan to register all 25,000,000 voting-age citizens with a biometric voter identification is also behind schedule, <a href="http://mtega.com/2015/03/is-there-still-time-for-nec-to-complete-biometric-voter-registration-for-tanzanias-constitution-referendum/" target="_blank">with some analysts estimating the earliest date they would be ready would be April 25</a>. 
 		</p>
 	</div>
 
-	<div class="blurb hidden right" id="draft-considerations">
-		<p>Certain key issues have been removed or watered down between the original draft constitution and the second draft (which is the current, and final, one). While the CRC draft was prepared by the Constitutional Review Commission, the second draft was prepared by the Constituent Assembly - made up of the ruling party, opposition parties (who later formed a coalition and walked out), and stakeholders from civil society. </p>
+	<div class="blurb hidden bottom" id="draft-considerations">
+		<p>Certain key issues have been removed between the second draft of the constitution and the final version. While the second draft was prepared by the Constitutional Review Commission, the final draft was prepared by the Constituent Assembly - made up of the ruling party, opposition parties (at first), and stakeholders from civil society. </p>
 		<p>What changed between drafts? The clause which allowed underperforming Members of Parliament to be ousted by their constituents has been removed. Transparency and accountability measures have been removed. And, perhaps most contentiously, the three-government proposal (Zanzibar, Tanganyika, and a union government) is gone.</p>
 	</div>
 
+	<div class="caption left">
+		<p>Data does not include Zanzibar. Full data available at the <a href="http://twaweza.org/go/sauti-za-wananchi-english" target="_blank">Sauti za Wananchi</a> website. Non-responses and other refusals are moved off-screen to the right.</p>
+		<p style="font-variant: small-caps"><a href="http://www.angelaambroz.com" target="_blank" style="text-decoration: none">angela ambroz</a></p>
+	</div>
+
+	<div class="hidden" id="tooltip"><p id="greeting">Habari ya leo?</p></div>
 
 <script>
 
@@ -152,31 +180,44 @@ var w = 1000,
 	radius = 2,
 	toggle = false,
 	obs,
-	// colors = [
-	// 	{ key: "gender", values: [{key: "Female", color: "rgb(255, 204, 255)"}, {key: "Male", color:"rgb(153, 204, 255)"}] },
-	// 	{ key: "rururb", values: [{ key: "Rural", color: "rgb(117, 157, 117)" } , {key: "Urban", color: "rgb(153, 153, 102)" }] },
-	// 	{ key: "age",  values: [{ key: "Young", color: "rgb(255, 255, 153)"}, {key: "Old", color: "rgb(0, 0, 102)" }] },
-	// 	{ key: "party", values: [{ key: "CCM", color: "rgb(0, 153, 51)"}, { key: "Opposition", color: "rgb(255, 0, 0)"}, {key: "None", color: "rgb(230, 230, 230)" }] }
-	// ],
 	colors = {
 		Female: "rgb(255, 204, 255)",
-		Male: "rgb(153, 204, 255)"
+		Male: "rgb(153, 204, 255)",
+		Rural: "rgb(214, 214, 194)",
+		Urban: "rgb(171, 171, 155)",
+		Under35: "rgb(163, 186, 209)",
+		Over35: "rgb(71, 117, 163)",
+		ccm: "rgb(178, 224, 194)",
+		Opposition: "rgb(255, 178, 178)",
+		None: "rgb(230, 230, 230)"
 	},
-	userSelection, buttons0;
+	greetings = [
+		"Hujambo?",
+		"Mambo!",
+		"Salama.",
+		"Habari ya leo?",
+		"Karibu!",
+		"Habari yako?",
+		"Hi!",
+		"Hello.",
+		"Mzima?"
+	],
+	userSelection, userLegend;
 
 var center = { x: w / 2, y: h / 2 };
 
 var ref_centers = {
 	"Vote for": { x: w/3+50 , y: h/2 },
-	"Vote against": { x: 2*(w/3)+50, y: h/2 },
-	"Not sure": { x: 1.5*w, y: h },
+	"Vote against": { x: w/2+50, y: h/2 },
+	"Not sure": { x: (2*w/3)+50, y: h/2 },
 	"Don't Know": { x: 1.5*w, y: h },
+	"Don't Know (vote)": { x: (2*w/3)+50, y: h/2 },
 	"No Response": { x: 1.5*w, y: h },
 	"None": { x: 1.5*w, y: h },
 	"Refused to Answer": { x: 1.5*w, y: h },
 	"I am not going to vote": { x: 1.5*w, y: h },
-	"CRC draft": { x: w/2, y: h/4 + 60 },
-	"Final draft": { x: w/2, y: 3*h/4-20 }
+	"CRC draft": { x: w/3+50, y: h/2-25 },
+	"Final draft": { x: 2*w/3+50, y: h/2-25 }
 }; 
 
 
@@ -209,7 +250,7 @@ reset.append("text")
 
 var by_gender = svg.append("g")
 	.attr("class", "legend")
-	.attr("id", "gender") //make sure this matches .csv var name
+	.attr("id", "gender") //make sure ID matches .csv var name
 	.on("click", legendify);
 
 var female = by_gender.append("g");
@@ -228,54 +269,122 @@ female.append("circle")
 var male = by_gender.append("g");
 
 male.append("text")
-	.attr("x", w-150)
+	.attr("x", w-120)
 	.attr("y", 103)
 	.text("Men");
 
 male.append("circle")
 	.attr("r", 2*radius)
-	.attr("cx", w-200)
+	.attr("cx", w-130)
 	.attr("cy", 100)
 	.style("fill", colors.Male );
 
+var by_urban = svg.append("g")
+	.attr("class", "legend")
+	.attr("id", "urban") //make sure ID matches .csv var name
+	.on("click", legendify);
 
-//Is there a way to collapse all of this?
-// var genders = svg.append("g.genders")
-// 	.attr("id", "gender")
-// 	.attr("class", "legend")
-// 	.on("click", legendify);
+var urban = by_urban.append("g");
 
-// var by_gender = genders.selectAll("g.by_gender")
-// 	.data(colors[0].values)
-// 	.enter().append("g");
+urban.append("text")
+	.attr("x", w-190)
+	.attr("y", 118)
+	.text("Urban");
 
-// by_gender.append("text")
-// 	.attr("x", function(d,i) { return w-190 + (i*30*radius); })
-// 	.attr("y", 103)
-// 	.text(function(d) { return d.key; });
+urban.append("circle")
+	.attr("r", 2*radius)
+	.attr("cx", w-200)
+	.attr("cy", 115)
+	.style("fill", colors.Urban );
 
-// by_gender.append("circle")
-// 	.attr("r", 2*radius)
-// 	.attr("cx", function(d,i) { return w-200 + (i*30*radius); })
-// 	.attr("cy", 100)
-// 	.style("fill", function(d) { return d.color; });
+var rural = by_urban.append("g");
 
-// var by_urban = svg.selectAll("g.by_urban")
-// 	.data(colors[1].values)
-// 	.enter().append("g")
-// 	.attr("class", "legend")
-// 	.on("click", legendify);
+rural.append("text")
+	.attr("x", w-120)
+	.attr("y", 118)
+	.text("Rural");
 
-// by_urban.append("text")
-// 	.attr("x", function(d,i) { return w-190 + (i*30*radius); })
-// 	.attr("y", 123)
-// 	.text(function(d) { return d.key; });
+rural.append("circle")
+	.attr("r", 2*radius)
+	.attr("cx", w-130)
+	.attr("cy", 115)
+	.style("fill", colors.Rural );
 
-// by_urban.append("circle")
-// 	.attr("r", 2*radius)
-// 	.attr("cx", function(d,i) { return w-200 + (i*30*radius); })
-// 	.attr("cy", 120)
-// 	.style("fill", function(d) { return d.color; });
+var by_age = svg.append("g")
+	.attr("class", "legend")
+	.attr("id", "age_cat") //make sure ID matches .csv var name
+	.on("click", legendify);
+
+var under = by_age.append("g");
+
+under.append("text")
+	.attr("x", w-190)
+	.attr("y", 118+15)
+	.text("Under 35");
+
+under.append("circle")
+	.attr("r", 2*radius)
+	.attr("cx", w-200)
+	.attr("cy", 130)
+	.style("fill", colors.Under35 );
+
+var over = by_age.append("g");
+
+over.append("text")
+	.attr("x", w-120)
+	.attr("y", 118+15)
+	.text("Over 35");
+
+over.append("circle")
+	.attr("r", 2*radius)
+	.attr("cx", w-130)
+	.attr("cy", 130)
+	.style("fill", colors.Over35 );
+
+
+var by_party = svg.append("g")
+	.attr("class", "legend")
+	.attr("id", "party") //make sure ID matches .csv var name
+	.on("click", legendify);
+
+var ccm_party = by_party.append("g");
+
+ccm_party.append("text")
+	.attr("x", w-190)
+	.attr("y", 118+30)
+	.text("CCM");
+
+ccm_party.append("circle")
+	.attr("r", 2*radius)
+	.attr("cx", w-200)
+	.attr("cy", 145)
+	.style("fill", colors.ccm );
+
+var opposition = by_party.append("g");
+
+opposition.append("text")
+	.attr("x", w-120)
+	.attr("y", 118+30)
+	.text("Opposition");
+
+opposition.append("circle")
+	.attr("r", 2*radius)
+	.attr("cx", w-130)
+	.attr("cy", 145)
+	.style("fill", colors.Opposition );
+
+var other = by_party.append("g");
+
+other.append("text")
+	.attr("x", w-40)
+	.attr("y", 118+30)
+	.text("None");
+
+other.append("circle")
+	.attr("r", 2*radius)
+	.attr("cx", w-50)
+	.attr("cy", 145)
+	.style("fill", colors.None );
 
 
 
@@ -302,12 +411,33 @@ function move_towards_vote(alpha) {
 }
 
 function nodify(d) {
+
+	//Categorizing the under and over 35 years old
+	d.age = +d.age;
+	var age_cat = "";
+	if (d.age<=35) { age_cat = "Under35"; }
+	else { age_cat = "Over35"; }
+
+	//Categorizing all non-CCM parties as opposition
+	if (d.party=="cuf" || d.party=="chadema" || d.party=="tlp" ||
+		d.party=="udp" || d.party=="nccr-mag" || d.party=="nld" ||
+		d.party=="ppt-maen") { d.party = "Opposition"; }
+	else if  (d.party=="i don't" || d.party=="  any on" || d.party==" none") { d.party = "None"; }
+	else if (d.party=="refused" || d.party==" refused" || d.party=="") { d.party = "None"; };
+
+	//Oh jeez
+	if (d.vote=="Don't Know") { d.vote=="Don't Know (vote)"; }
+
+	//Prepping the nodes
 	var node = {
 		id: +d.uhn,
-		draft: d.q4_2015,
-		vote: d.q12_2015,
-		sex: d.gender_2015,
-		urban: d.urban_2015
+		draft: d.draft,
+		vote: d.vote,
+		gender: d.gender,
+		urban: d.urban,
+		party: d.party,
+		age: d.age,
+		age_cat: age_cat
 	};
 	nodes.push(node);
 };
@@ -329,9 +459,8 @@ function update(d) {
 };
 
 function legendify() {
-	userSelection = d3.select(this).attr("id");
-	console.log(userSelection);
-	//highlight it in some way
+	userLegend = d3.select(this).attr("id");
+	obs.style("fill", function(d) { return colors[d[userLegend]]; });
 };
 
 function resetting() {
@@ -346,24 +475,6 @@ function resetting() {
 	.start();	
 };
 
-function urbanizing(d) {
-	console.log(toggle);
-
-	if(toggle===false) {
-		obs.style("stroke-width", "1px")
-			.style("stroke", function(d) {
-				if (d.urban=="Urban") { return "black"; }
-				else { return null; }
-				});
-		toggle = true;
-	}
-	else {
-		obs.style("stroke-width", 0)
-			.style("stroke", null);
-		toggle = false;
-	}
-
-};
 
 
 function viz(data) {
@@ -377,15 +488,13 @@ function viz(data) {
 		.nodes(nodes)
 		.size([w - margins, h - margins]);
 
-	//This is where the callback error is happening
 	obs = svg.selectAll("circle")
 		.data(nodes)
 		.enter()
 		.append("circle")
 		.attr("r", radius)
 		.style("fill", function(d) { 
-			if (!userSelection) { return colors[d.sex]; }
-			else { return colors.d[userSelection]; }
+			return colors[d.gender];
 		})
 		.style("opacity", 0.8) 
 		.attr("id", function(d) { return "obs_" + d.id; })
@@ -401,22 +510,50 @@ function viz(data) {
 			})
 		.start();
 
-}; //end viz function
+	//Welcome!
+	var easter_egg = setInterval(function() { easter(); }, 2000);
+	setTimeout(function() { 
+		clearInterval(easter_egg); 
+		d3.select("#tooltip").classed("hidden", true);
+		}, 15000);
+
+};
+
+function easter() {
+
+	d3.selectAll("#tooltip").classed("hidden", true);
+
+	function getRandomInt(min, max) {
+		return Math.floor(Math.random() * (max - min)) + min;
+	}
+
+	var random_x = w/2 + getRandomInt(-100,100);
+	var random_y = h/2 + getRandomInt(-100,100);
+	var hello = greetings[getRandomInt(0,greetings.length)];
+
+	d3.select("#tooltip")
+		.classed("hidden", false)
+		.style("top", random_y + "px")
+		.style("left", random_x + "px");
+
+	d3.select("#greeting")
+		.text(hello);
+
+}
 
 
 //Calling everything
 
-//Better organization: putting everything into above functions
-d3.csv("udacity.csv", nodify, viz)
 
-//Update with draft vs. 
+d3.tsv("udacity2.csv", nodify, viz)
+
+//Update with draft, vote.
 d3.selectAll(".buttons").on("click", update);
 
 //Reset
 d3.select("#reset").on("click", resetting);
 
-//Rural-urban split
-d3.select("#rural-urban").on("click", urbanizing);
+
 
 </script>
 
